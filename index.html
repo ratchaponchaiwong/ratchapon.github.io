@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ห้องเรียนวิทยาการคำนวณ By ครูรัชพล</title>
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ==================== โครงสร้างหลักและพื้นหลัง ==================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Prompt', 'Inter', sans-serif; transition: background 0.5s ease; overflow-x: hidden; position: relative; cursor: default; min-height: 100vh; display: flex; flex-direction: column;}
+        
+        body[data-theme="default"] { background: linear-gradient(135deg, #0a0f2a 0%, #0f172a 50%, #1e293b 100%); color: white; }
+        body[data-theme="snow"] { background: linear-gradient(135deg, #cfe3ff 0%, #e0f0ff 50%, #f0f8ff 100%); color: #1e293b; }
+        body[data-theme="forest"] { background: linear-gradient(135deg, #1a3c1a 0%, #2d5a2d 50%, #3e7a3e 100%); color: white; }
+        body[data-theme="halloween"] { background: linear-gradient(135deg, #1a0b1a 0%, #2d1a2d 50%, #401040 100%); color: white; }
+        body[data-theme="love"] { background: linear-gradient(135deg, #ffb7c5 0%, #ff9eb0 50%, #ff85a0 100%); color: #1e293b; }
+        
+        /* เอฟเฟกต์พื้นหลัง */
+        .sparkle { position: fixed; width: 4px; height: 4px; background: white; border-radius: 50%; opacity: 0; pointer-events: none; z-index: 1; animation: sparkleAnim 3s infinite; }
+        @keyframes sparkleAnim { 0%, 100% { opacity: 0; transform: scale(0); } 50% { opacity: 0.6; transform: scale(1); } }
+        
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; }
+        .bg-animation .circle { position: absolute; background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0) 70%); border-radius: 50%; animation: float 20s infinite ease-in-out; }
+        body[data-theme="snow"] .bg-animation .circle { background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%); }
+        body[data-theme="forest"] .bg-animation .circle { background: radial-gradient(circle, rgba(144,238,144,0.2) 0%, rgba(144,238,144,0) 70%); }
+        body[data-theme="love"] .bg-animation .circle { background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%); }
+        @keyframes float { 0%, 100% { transform: translateY(0) translateX(0) scale(1); } 25% { transform: translateY(-30px) translateX(20px) scale(1.05); } 75% { transform: translateY(30px) translateX(-20px) scale(0.95); } }
+        .bg-animation .circle:nth-child(1) { width: 400px; height: 400px; top: -100px; left: -100px; animation-duration: 25s; }
+        .bg-animation .circle:nth-child(2) { width: 600px; height: 600px; bottom: -200px; right: -100px; animation-duration: 30s; animation-delay: -5s; }
+        
+        #particleContainer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .theme-particle { position: absolute; top: -10vh; pointer-events: none; animation: fallDown linear forwards; z-index: 1; }
+        @keyframes fallDown { 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(110vh) translateX(30px) rotate(360deg); opacity: 0; } }
+
+        .content-layer { position: relative; z-index: 10; display: flex; flex-direction: column; flex: 1; }
+        
+        /* ==================== Header ==================== */
+        header { background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(12px); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; gap: 15px;}
+        body[data-theme="snow"] header, body[data-theme="love"] header { background: rgba(255, 255, 255, 0.6); border-bottom-color: rgba(0,0,0,0.1); }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #3b82f6); -webkit-background-clip: text; color: transparent; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: 0.3s;}
+        .logo:hover { transform: scale(1.02); }
+        
+        .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; flex-wrap: wrap;}
+        .nav-links a { text-decoration: none; color: #e2e8f0; font-weight: 500; transition: 0.3s; padding: 8px 15px; border-radius: 30px; font-size: 0.95rem; }
+        body[data-theme="snow"] .nav-links a, body[data-theme="love"] .nav-links a { color: #2d3748; }
+        .nav-links a:hover, .nav-links a.active { color: #fff; background: #3b82f6; box-shadow: 0 4px 10px rgba(59,130,246,0.3); }
+        
+        .login-area { display: flex; align-items: center; gap: 15px; }
+        .login-btn { background: #3b82f6; border: none; padding: 10px 25px; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; font-family: 'Prompt'; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(59,130,246,0.3); transition: 0.3s;}
+        .login-btn:hover { transform: translateY(-2px); background: #2563eb; }
+        
+        .user-info { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.15); padding: 5px 15px 5px 5px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); }
+        body[data-theme="snow"] .user-info, body[data-theme="love"] .user-info { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #3b82f6; background: white; }
+        .user-name { font-size: 0.9rem; font-weight: 500; color: inherit; }
+        .logout-btn { background: rgba(239, 68, 68, 0.2); border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; color: #ef4444; font-size: 0.8rem; transition: 0.2s;}
+        .logout-btn:hover { background: #ef4444; color: white; }
+
+        /* Theme Switcher */
+        .theme-switcher { background: rgba(0,0,0,0.3); backdrop-filter: blur(12px); padding: 10px 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; position: sticky; top: 75px; z-index: 99; border-radius: 50px; width: fit-content; margin: 15px auto; border: 1px solid rgba(255,255,255,0.1); }
+        body[data-theme="snow"] .theme-switcher, body[data-theme="love"] .theme-switcher { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.1); }
+        .theme-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 40px; color: inherit; font-weight: 500; cursor: pointer; transition: 0.3s; font-family: 'Prompt'; font-size: 0.85rem; }
+        body[data-theme="snow"] .theme-btn, body[data-theme="love"] .theme-btn { border-color: rgba(0,0,0,0.1); }
+        .theme-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; box-shadow: 0 4px 10px rgba(59,130,246,0.3); }
+
+        /* ==================== โครงสร้างหน้าเว็บแบบสมส่วน (Proportional Layout) ==================== */
+        .page-content-wrapper { padding: 20px; max-width: 1050px; margin: 0 auto; width: 100%; z-index: 10; position: relative; flex: 1; display: flex; flex-direction: column; gap: 40px; }
+        
+        .hero { display: flex; align-items: center; justify-content: space-between; padding: 40px; flex-wrap: wrap; gap: 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin-top: 10px; }
+        body[data-theme="snow"] .hero, body[data-theme="love"] .hero { background: rgba(255, 255, 255, 0.8); border-color: rgba(0,0,0,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        .hero-content { flex: 1; min-width: 300px; animation: fadeInUp 1s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .hero-badge { display: inline-block; background: rgba(59,130,246,0.2); padding: 8px 20px; border-radius: 40px; font-size: 0.85rem; border: 1px solid rgba(59,130,246,0.5); margin-bottom: 20px; color: #60a5fa; font-weight: 600;}
+        body[data-theme="snow"] .hero-badge, body[data-theme="love"] .hero-badge { color: #3b82f6; border-color: #3b82f6; }
+        
+        .hero-content h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; background: linear-gradient(135deg, #60a5fa, #3b82f6); -webkit-background-clip: text; color: transparent; }
+        .hero-content p { font-size: 1.1rem; margin-bottom: 30px; line-height: 1.6; opacity: 0.8; }
+        
+        .hero-robot { flex: 1; min-width: 300px; text-align: center; position: relative; cursor: pointer; }
+        .robot-container { position: relative; display: inline-block; transition: transform 0.2s; }
+        .robot-container:hover { transform: scale(1.02); }
+        .robot-main { width: 100%; max-width: 350px; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2)); pointer-events: none; transition: filter 0.3s; }
+        .robot-container:hover .robot-main { filter: drop-shadow(0 0 20px rgba(59,130,246,0.5)); }
+        
+        .robot-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120%; height: 120%; border-radius: 50%; animation: glowPulse 3s infinite; pointer-events: none; }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } }
+        
+        .outfit-icon { position: absolute; bottom: -20px; right: 10px; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); border-radius: 30px; padding: 8px 15px; display: flex; gap: 10px; cursor: pointer; border: 1px solid #ffd700; transition: 0.2s; z-index: 20; align-items: center;}
+        .outfit-icon:hover { transform: scale(1.1) translateY(-3px); background: rgba(0,0,0,0.8); box-shadow: 0 0 15px rgba(255,215,0,0.5); }
+        .outfit-icon i { font-size: 1.2rem; color: #ffd700; transition: 0.2s; }
+        .outfit-icon span { font-size: 0.8rem; color: white; font-weight: 600;}
+        
+        /* แอนิเมชันหุ่นยนต์ */
+        @keyframes bounce1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-25px)} }
+        @keyframes bounce2 { 0%,100%{transform:translateY(0) rotate(0deg)} 25%{transform:translateY(-18px) rotate(-8deg)} 75%{transform:translateY(8px) rotate(8deg)} }
+        @keyframes bounce3 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-12px)} 75%{transform:translateX(12px)} }
+        @keyframes wiggle { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-12deg)} 75%{transform:rotate(12deg)} }
+        .bounce1 { animation: bounce1 0.4s cubic-bezier(0.68,-0.55,0.265,1.55) !important; }
+        .bounce2 { animation: bounce2 0.5s cubic-bezier(0.68,-0.55,0.265,1.55) !important; }
+        .bounce3 { animation: bounce3 0.3s cubic-bezier(0.68,-0.55,0.265,1.55) !important; }
+        .shake { animation: shake 0.3s ease-in-out !important; }
+        .wiggle { animation: wiggle 0.4s ease-in-out !important; }
+        
+        /* เต้นอัตโนมัติ */
+        @keyframes autoDance1 { 0%,100%{transform:translateY(0)} 25%{transform:translateY(-10px)} 75%{transform:translateY(6px)} }
+        @keyframes autoDance2 { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+        @keyframes autoDance3 { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} }
+        .autoDance1 { animation: autoDance1 0.8s ease-in-out infinite; }
+        .autoDance2 { animation: autoDance2 0.6s ease-in-out infinite; }
+        .autoDance3 { animation: autoDance3 0.7s ease-in-out infinite; }
+        
+        /* คำพูดหุ่นยนต์ */
+        .speech-bubble { position: fixed; background: white; color: #1e293b; padding: 12px 20px; border-radius: 30px; font-weight: 600; font-size: 1rem; box-shadow: 0 8px 25px rgba(0,0,0,0.2); z-index: 200; animation: bubblePop 0.3s cubic-bezier(0.68,-0.55,0.265,1.55); pointer-events: none; white-space: nowrap; border: 2px solid #ffd700; }
+        .speech-bubble::before { content: ''; position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 15px solid white; }
+        @keyframes bubblePop { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .floating-heart { position: fixed; font-size: 1.5rem; pointer-events: none; z-index: 200; animation: floatHeart 1.5s ease-out forwards; }
+        @keyframes floatHeart { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
+        .click-flash { position: fixed; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,215,0,0) 70%); pointer-events: none; z-index: 200; animation: flashRipple 0.6s ease-out forwards; }
+        @keyframes flashRipple { 0% { transform: scale(0); opacity: 0.8; } 100% { transform: scale(3); opacity: 0; } }
+
+        /* ==================== 🌟 Features Section (ปรับให้เป็นการ์ดใส) 🌟 ==================== */
+        .features { margin-bottom: 20px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        
+        .feature-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 30px 20px; border-radius: 24px; text-align: center; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; color: inherit; }
+        body[data-theme="snow"] .feature-card, body[data-theme="love"] .feature-card { background: rgba(255,255,255,0.8); border-color: rgba(0,0,0,0.1); box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
+        .feature-card:hover { transform: translateY(-8px); border-color: #3b82f6; box-shadow: 0 15px 30px rgba(0,0,0,0.2); background: rgba(255,255,255,0.1); }
+        body[data-theme="snow"] .feature-card:hover, body[data-theme="love"] .feature-card:hover { background: rgba(255,255,255,1); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        
+        .feature-icon { width: 70px; height: 70px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2rem; color: white; transition: 0.3s; box-shadow: 0 8px 20px rgba(59,130,246,0.3); }
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(5deg); }
+        .feature-card h4 { font-size: 1.1rem; margin-bottom: 5px; }
+        .feature-card p { font-size: 0.85rem; opacity: 0.8; }
+        
+        /* Modals */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.3s; }
+        .modal.active { visibility: visible; opacity: 1; }
+        .modal-content, .wardrobe-content { background: rgba(30, 41, 59, 0.95); border-radius: 24px; padding: 35px; width: 90%; max-width: 400px; border: 1px solid rgba(59,130,246,0.4); position: relative; text-align: center; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        body[data-theme="snow"] .modal-content, body[data-theme="love"] .modal-content,
+        body[data-theme="snow"] .wardrobe-content, body[data-theme="love"] .wardrobe-content { background: rgba(255, 255, 255, 0.95); color: #1e293b; border-color: rgba(0,0,0,0.1); }
+        
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: inherit; background: none; border: none; opacity: 0.7; transition: 0.2s; }
+        .close-modal:hover { opacity: 1; color: #ef4444; }
+
+        /* ตู้เสื้อผ้า */
+        .wardrobe-content { max-width: 550px; border-color: #ffd700; box-shadow: 0 0 30px rgba(255,215,0,0.2);}
+        body[data-theme="snow"] .wardrobe-content, body[data-theme="love"] .wardrobe-content { border-color: #f59e0b; }
+        .wardrobe-content h3 { color: #ffd700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; justify-content: center; }
+        body[data-theme="snow"] .wardrobe-content h3, body[data-theme="love"] .wardrobe-content h3 { color: #f59e0b; }
+        
+        .dressup-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0; }
+        .dressup-category { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 12px; min-width: 130px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1);}
+        body[data-theme="snow"] .dressup-category, body[data-theme="love"] .dressup-category { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.1); }
+        
+        .dressup-category label { display: block; font-size: 0.75rem; color: #ffd700; margin-bottom: 8px; font-weight: 600;}
+        body[data-theme="snow"] .dressup-category label, body[data-theme="love"] .dressup-category label { color: #f59e0b; }
+        
+        .dressup-category select { width: 100%; padding: 8px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; font-family: 'Prompt'; font-size: 0.85rem; }
+        body[data-theme="snow"] .dressup-category select, body[data-theme="love"] .dressup-category select { background: white; border-color: #cbd5e1; color: #1e293b;}
+        
+        .save-outfit-btn { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; padding: 12px 30px; border-radius: 40px; color: #1e293b; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Prompt'; width: 100%; margin-top: 15px; font-size: 1rem; box-shadow: 0 5px 15px rgba(255,215,0,0.3);}
+        .save-outfit-btn:hover { transform: scale(1.02); box-shadow: 0 5px 25px rgba(255,215,0,0.5); }
+
+        footer { text-align: center; padding: 25px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto; font-size: 0.85rem; opacity: 0.8; }
+        body[data-theme="snow"] footer, body[data-theme="love"] footer { border-top-color: rgba(0,0,0,0.1); }
+
+        @media (max-width: 768px) { .hero { flex-direction: column; padding: 30px 20px; text-align: center;} .page-content-wrapper{ padding: 15px; } }
+    </style>
+</head>
+<body data-theme="default">
+    <div class="bg-animation"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
+    <div id="particleContainer"></div>
+
+    <div class="content-layer">
+        <header>
+            <a href="index.html" class="logo"><i class="fas fa-robot"></i><span>PROT Smart Workspace</span></a>
+            <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">หน้าหลัก</a></li>
+                    <li><a href="student.html">ห้องเรียนของฉัน</a></li>
+                    <li><a href="teacher_profile.html">ข้อมูลผู้สอน</a></li>
+                    <li><a href="student_portfolio.html">ผลงานนักเรียน</a></li>
+                </ul>
+                <div class="login-area" id="loginArea">
+                    <button class="login-btn" id="showLoginBtn"><i class="fas fa-sign-in-alt"></i> ลงชื่อเข้าเรียน</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="theme-switcher">
+            <button class="theme-btn active" data-theme="default">🤖 เริ่มต้น</button>
+            <button class="theme-btn" data-theme="snow">❄️ หิมะ</button>
+            <button class="theme-btn" data-theme="forest">🌿 ป่าเขียว</button>
+            <button class="theme-btn" data-theme="halloween">🎃 ฮัลโลวีน</button>
+            <button class="theme-btn" data-theme="love">🌸 ซากุระ</button>
+        </div>
+
+        <div class="page-content-wrapper">
+            <div class="hero">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fas fa-microchip"></i> วิทยาการคำนวณ ม.4</span>
+                    <h1>เรียนรู้ Coding & Robotics <br>สู่โลกแห่งอนาคต</h1>
+                    <p>พัฒนาทักษะการเขียนโปรแกรม Python, Arduino และนวัตกรรมหุ่นยนต์ PROT ROBOT พร้อมระบบการเรียนรู้แบบ Interactive</p>
+                </div>
+                <div class="hero-robot" id="heroRobot">
+                    <div class="robot-container" id="robotContainer">
+                        <div class="robot-glow" id="robotGlow"></div>
+                        <svg class="robot-main" id="robotSvg" viewBox="0 0 400 400" fill="none">
+                            <defs><clipPath id="headClip"><rect x="120" y="100" width="160" height="160" rx="30"/></clipPath></defs>
+                            <path id="antenna" d="M200 100 L190 70 L210 70 Z" fill="#f59e0b"/>
+                            <circle id="antennaBall" cx="200" cy="70" r="8" fill="#ff6b6b"/>
+                            <rect id="robotHead" x="120" y="100" width="160" height="160" rx="30" fill="#3b82f6"/>
+                            <path id="hairStyle" d="" fill="#8B4513" opacity="0"/>
+                            <rect id="leftBrow" x="155" y="140" width="25" height="6" rx="3" fill="#4a2c1a" opacity="0.8"/>
+                            <rect id="rightBrow" x="220" y="140" width="25" height="6" rx="3" fill="#4a2c1a" opacity="0.8"/>
+                            <circle cx="170" cy="160" r="14" fill="white" id="leftEyeWhite"/>
+                            <circle cx="230" cy="160" r="14" fill="white" id="rightEyeWhite"/>
+                            <circle cx="172" cy="158" r="8" fill="#0f172a" id="leftPupil"/>
+                            <circle cx="232" cy="158" r="8" fill="#0f172a" id="rightPupil"/>
+                            <circle cx="150" cy="175" r="10" fill="#ff9999" opacity="0.3" id="leftCheek"/>
+                            <circle cx="250" cy="175" r="10" fill="#ff9999" opacity="0.3" id="rightCheek"/>
+                            <path id="foreheadPattern" d="" fill="#ffd700" opacity="0"/>
+                            <rect id="robotBody" x="150" y="260" width="100" height="80" rx="20" fill="#2563eb"/>
+                            <path id="shirtPattern" d="" fill="#ffd700" opacity="0"/>
+                            <rect id="leftArm" x="110" y="280" width="40" height="20" rx="10" fill="#3b82f6"/>
+                            <rect id="rightArm" x="250" y="280" width="40" height="20" rx="10" fill="#3b82f6"/>
+                            <rect id="leftLeg" x="165" y="340" width="30" height="35" rx="10" fill="#1e3a5f"/>
+                            <rect id="rightLeg" x="205" y="340" width="30" height="35" rx="10" fill="#1e3a5f"/>
+                            <ellipse id="leftShoe" cx="180" cy="378" rx="20" ry="8" fill="#4a4a4a"/>
+                            <ellipse id="rightShoe" cx="220" cy="378" rx="20" ry="8" fill="#4a4a4a"/>
+                        </svg>
+                    </div>
+                    <div id="outfitIcon" class="outfit-icon" style="display: none;">
+                        <i class="fas fa-tshirt"></i>
+                        <span>แต่งตัว!</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <h2 style="text-align:center; margin-bottom:30px; color:inherit; font-size: 1.5rem;"><i class="fas fa-star" style="color:#f59e0b;"></i> ทำไมต้องเรียนกับเรา?</h2>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="if(localStorage.getItem('is_logged_in')==='true') window.location.href='python.html'; else openLoginModal()">
+                        <div class="feature-icon"><i class="fab fa-python"></i></div><h4>ห้อง Lab Python</h4><p>ฝึกเขียนโค้ดภาษา Python</p>
+                    </div>
+                    <div class="feature-card" onclick="if(localStorage.getItem('is_logged_in')==='true') window.location.href='robotics.html'; else openLoginModal()">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div><h4>PROT ROBOT</h4><p>สร้างหุ่นยนต์ด้วยโครงงานจริง</p>
+                    </div>
+                    <div class="feature-card" onclick="window.location.href='teacher_profile.html';">
+                        <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div><h4>ผู้สอนมืออาชีพ</h4><p>TECHNOLOGY COMPUTER</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><i class="fas fa-copyright"></i> 2026 ห้องเรียนวิทยาการคำนวณ By ครูรัชพล | วิทยาการคำนวณเพื่ออนาคต</p>
+        </footer>
+    </div>
+
+    <div id="wardrobeModal" class="modal">
+        <div class="wardrobe-content">
+            <button class="close-modal" onclick="closeWardrobe()">&times;</button>
+            <h3><i class="fas fa-tshirt"></i> ตู้เสื้อผ้าหุ่นยนต์ <i class="fas fa-smile-wink"></i></h3>
+            <div class="dressup-grid">
+                <div class="dressup-category"><label><i class="fas fa-palette"></i> สีผิว</label>
+                    <select id="skinColor"><option value="#3b82f6">💙 ฟ้า</option><option value="#60a5fa">🌀 ฟ้าอ่อน</option><option value="#fcd34d">🌟 ทอง</option><option value="#f472b6">🌸 ชมพู</option><option value="#34d399">🍃 เขียว</option><option value="#a78bfa">💜 ม่วง</option></select></div>
+                <div class="dressup-category"><label><i class="fas fa-smile"></i> หน้าตา</label>
+                    <select id="faceMouth"><option value="smile">😊 ยิ้ม</option><option value="happy">😄 ดีใจ</option><option value="love">😍 รัก</option><option value="wink">😉 ขยิบตา</option><option value="cool">😎 เท่</option></select></div>
+                <div class="dressup-category"><label><i class="fas fa-fill-drip"></i> สีเสื้อ</label>
+                    <select id="shirtColor"><option value="#2563eb">🔵 น้ำเงิน</option><option value="#dc2626">🔴 แดง</option><option value="#ea580c">🟠 ส้ม</option><option value="#16a34a">🟢 เขียว</option><option value="#9333ea">🟣 ม่วง</option><option value="#fbbf24">🟡 เหลือง</option><option value="#ec4899">🌸 ชมพู</option></select></div>
+                <div class="dressup-category"><label><i class="fas fa-shield-alt"></i> ลายเสื้อ</label>
+                    <select id="pattern"><option value="none">✨ ไม่มี</option><option value="star">⭐ ดาว</option><option value="heart">❤️ หัวใจ</option><option value="circle">⚪ วงกลม</option><option value="stripe">📏 ลายเส้น</option></select></div>
+                <div class="dressup-category"><label><i class="fas fa-shoe-prints"></i> รองเท้า</label>
+                    <select id="shoeColor"><option value="#4a4a4a">⚫ ดำ</option><option value="#dc2626">🔴 แดง</option><option value="#fbbf24">🟡 ทอง</option><option value="#ffffff">⚪ ขาว</option><option value="#8b4513">🤎 น้ำตาล</option></select></div>
+                <div class="dressup-category"><label><i class="fas fa-crown"></i> หมวก/ผม</label>
+                    <select id="hatStyle"><option value="none">🚫 ไม่มี</option><option value="cap">🧢 แคป</option><option value="crown">👑 มงกุฎ</option><option value="flower">🌸 ดอกไม้</option><option value="bow">🎀 โบว์</option></select></div>
+            </div>
+            <button class="save-outfit-btn" onclick="saveOutfit()"><i class="fas fa-save"></i> บันทึกชุดเก่ง</button>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <button class="close-modal" onclick="closeLoginModal()">×</button>
+            <h3 style="color: inherit; margin-bottom: 10px;"><i class="fas fa-user-graduate"></i> ลงชื่อเข้าเรียน</h3>
+            <p style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 15px;">กรุณาใช้อีเมล @gmail.com หรือ @prot.ac.th</p>
+            
+            <div id="in-app-warning" style="display: none; background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #d97706; padding: 10px; border-radius: 10px; font-size: 0.8rem; margin-bottom: 15px;">
+                ⚠️ หากปุ่มล็อกอินไม่ทำงาน กรุณากดจุด 3 จุดมุมขวาบน แล้วเลือก <b>"เปิดในเบราว์เซอร์ (Safari/Chrome)"</b>
+            </div>
+
+            <div id="google-login-button" style="display: flex; justify-content: center; min-height: 44px;"></div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6LgfZ1EMcKAh8shNWgqHzqHJgF76GFA79jECZbketXpu_r0ghIOUCu1LH0TICLmZj1A/exec";
+        
+        // 🌟 เพิ่มฟังก์ชันถอดรหัสของ Google (ตัวแก้ปัญหาล็อกอินค้าง) 🌟
+        function decodeJwtResponse(token) {
+            let base64Url = token.split('.')[1];
+            let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) { return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); }).join('')));
+        }
+
+        function createClickFlash(x, y) {
+            const flash = document.createElement('div');
+            flash.className = 'click-flash';
+            flash.style.left = (x - 50) + 'px';
+            flash.style.top = (y - 50) + 'px';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 600);
+        }
+
+        function updateLastActive(email, type) {
+            fetch(SCRIPT_URL, {
+            method: 'POST', mode: 'no-cors',
+            body: JSON.stringify({ action: 'updateTimestamp', email: email, type: type })
+            }).catch(e => console.log("Timestamp Error:", e));
+        }
+        
+        function createFloatingHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = ['❤️', '💖', '💗', '💓', '💕'][Math.floor(Math.random() * 5)];
+            heart.style.left = (x - 15) + 'px';
+            heart.style.top = (y - 20) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1500);
+        }
+        
+        function blinkEyesRandomly() {
+            setInterval(() => {
+                if(Math.random() > 0.95) {
+                    const leftPupil = document.getElementById('leftPupil');
+                    const rightPupil = document.getElementById('rightPupil');
+                    if(leftPupil && rightPupil) {
+                        const originalL = leftPupil.getAttribute('r');
+                        const originalR = rightPupil.getAttribute('r');
+                        leftPupil.setAttribute('r', '2');
+                        rightPupil.setAttribute('r', '2');
+                        setTimeout(() => {
+                            leftPupil.setAttribute('r', originalL);
+                            rightPupil.setAttribute('r', originalR);
+                        }, 150);
+                    }
+                }
+            }, 3000);
+        }
+        
+        async function saveOutfit() {
+            if (!localStorage.getItem('is_logged_in')) {
+                alert('⚠️ กรุณาเข้าสู่ระบบก่อนบันทึกชุด');
+                openLoginModal();
+                return;
+            }
+            
+            const email = localStorage.getItem('student_email');
+            const outfitData = {
+                email: email,
+                skinColor: document.getElementById('skinColor').value,
+                shirtColor: document.getElementById('shirtColor').value,
+                shoeColor: document.getElementById('shoeColor').value,
+                faceMouth: document.getElementById('faceMouth').value,
+                pattern: document.getElementById('pattern').value,
+                hatStyle: document.getElementById('hatStyle').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem(`robot_outfit_${email}`, JSON.stringify(outfitData));
+            
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(outfitData)
+                });
+                showSpeechBubble('💾 บันทึกชุดน่ารักๆ เรียบร้อย! 💕');
+                updateLastActive(email, 'last_update');
+            } catch(e) {
+                showSpeechBubble('💾 บันทึกในเครื่องเรียบร้อย');
+            }
+            closeWardrobe();
+        }
+        
+        async function loadOutfit() {
+            const email = localStorage.getItem('student_email');
+            if (!email) return;
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                if (data && data.skinColor && data.skinColor !== undefined) {
+                    document.getElementById('skinColor').value = data.skinColor;
+                    document.getElementById('shirtColor').value = data.shirtColor;
+                    document.getElementById('shoeColor').value = data.shoeColor;
+                    document.getElementById('faceMouth').value = data.faceMouth;
+                    document.getElementById('pattern').value = data.pattern;
+                    document.getElementById('hatStyle').value = data.hatStyle;
+                    updateRobotOutfit();
+                    showSpeechBubble('🎉 โหลดชุดสำเร็จ! วันนี้ก็หล่อเหมือนเดิม 💖');
+                    startAutoDance();
+                    return;
+                }
+            } catch(e) {}
+            
+            const saved = localStorage.getItem(`robot_outfit_${email}`);
+            if (saved) {
+                const outfit = JSON.parse(saved);
+                document.getElementById('skinColor').value = outfit.skinColor;
+                document.getElementById('shirtColor').value = outfit.shirtColor;
+                document.getElementById('shoeColor').value = outfit.shoeColor;
+                document.getElementById('faceMouth').value = outfit.faceMouth;
+                document.getElementById('pattern').value = outfit.pattern;
+                document.getElementById('hatStyle').value = outfit.hatStyle;
+                updateRobotOutfit();
+                showSpeechBubble('🎉 ยินดีต้อนรับกลับ! 💖');
+                startAutoDance();
+            } else {
+                updateRobotOutfit();
+                showSpeechBubble('🤖 สวัสดี! กดที่ไอคอนเสื้อผ้าเพื่อแต่งตัวให้เราสิ 🎨');
+                startAutoDance();
+            }
+        }
+        
+        function updateRobotOutfit() {
+            const skinColor = document.getElementById('skinColor').value;
+            const shirtColor = document.getElementById('shirtColor').value;
+            const shoeColor = document.getElementById('shoeColor').value;
+            const faceMouth = document.getElementById('faceMouth').value;
+            const pattern = document.getElementById('pattern').value;
+            const hatStyle = document.getElementById('hatStyle').value;
+            
+            document.getElementById('robotHead').setAttribute('fill', skinColor);
+            document.getElementById('robotBody').setAttribute('fill', shirtColor);
+            document.getElementById('leftArm').setAttribute('fill', shirtColor);
+            document.getElementById('rightArm').setAttribute('fill', shirtColor);
+            document.getElementById('leftShoe').setAttribute('fill', shoeColor);
+            document.getElementById('rightShoe').setAttribute('fill', shoeColor);
+            
+            const patternPath = document.getElementById('shirtPattern');
+            if (pattern === 'star') patternPath.setAttribute('d', 'M170 290 L180 275 L190 290 L200 275 L210 290 L220 275 L230 290 Z');
+            else if (pattern === 'heart') patternPath.setAttribute('d', 'M200 285 C190 275, 180 280, 200 295 C220 280, 210 275, 200 285 Z');
+            else if (pattern === 'circle') patternPath.setAttribute('d', 'M175 290 A10 10 0 1 1 175 290 M200 290 A10 10 0 1 1 200 290 M225 290 A10 10 0 1 1 225 290');
+            else if (pattern === 'stripe') patternPath.setAttribute('d', 'M160 280 L240 280 M160 295 L240 295 M160 310 L240 310 M160 325 L240 325');
+            else patternPath.setAttribute('d', '');
+            patternPath.setAttribute('opacity', pattern !== 'none' ? '0.8' : '0');
+            
+            const foreheadPattern = document.getElementById('foreheadPattern');
+            if (pattern === 'star') foreheadPattern.setAttribute('d', 'M185 120 L195 108 L200 115 L205 108 L215 120 Z');
+            else foreheadPattern.setAttribute('d', '');
+            foreheadPattern.setAttribute('opacity', pattern === 'star' ? '0.9' : '0');
+            
+            const hairPath = document.getElementById('hairStyle');
+            if (hatStyle === 'cap') hairPath.setAttribute('d', 'M115 110 Q200 85 285 110 L285 130 Q200 100 115 130 Z');
+            else if (hatStyle === 'crown') hairPath.setAttribute('d', 'M170 95 L180 80 L190 95 L200 78 L210 95 L220 80 L230 95');
+            else if (hatStyle === 'flower') hairPath.setAttribute('d', 'M195 95 C195 85, 205 85, 205 95 C210 90, 215 100, 205 105 C210 110, 200 115, 200 105 C200 115, 190 110, 195 105 C185 100, 190 90, 195 95 Z');
+            else if (hatStyle === 'bow') hairPath.setAttribute('d', 'M185 105 Q195 95 200 105 Q205 95 215 105 Q205 115 200 110 Q195 115 185 105 Z');
+            else hairPath.setAttribute('d', '');
+            hairPath.setAttribute('opacity', hatStyle !== 'none' ? '0.9' : '0');
+            
+            const leftPupil = document.getElementById('leftPupil');
+            const rightPupil = document.getElementById('rightPupil');
+            const leftEyeWhite = document.getElementById('leftEyeWhite');
+            const rightEyeWhite = document.getElementById('rightEyeWhite');
+            const leftBrow = document.getElementById('leftBrow');
+            const rightBrow = document.getElementById('rightBrow');
+            
+            leftPupil.setAttribute('cx', '172'); leftPupil.setAttribute('r', '8'); leftPupil.setAttribute('fill', '#0f172a');
+            rightPupil.setAttribute('cx', '232'); rightPupil.setAttribute('r', '8'); rightPupil.setAttribute('fill', '#0f172a');
+            leftEyeWhite.setAttribute('fill', 'white'); rightEyeWhite.setAttribute('fill', 'white');
+            leftBrow.removeAttribute('transform'); rightBrow.removeAttribute('transform');
+            leftBrow.setAttribute('y', '140'); rightBrow.setAttribute('y', '140');
+            
+            if (faceMouth === 'happy') { leftPupil.setAttribute('r', '10'); rightPupil.setAttribute('r', '10'); leftBrow.setAttribute('y', '135'); rightBrow.setAttribute('y', '135'); }
+            else if (faceMouth === 'love') { leftPupil.setAttribute('fill', '#ff6b6b'); rightPupil.setAttribute('fill', '#ff6b6b'); leftEyeWhite.setAttribute('fill', '#ffb7c5'); rightEyeWhite.setAttribute('fill', '#ffb7c5'); }
+            else if (faceMouth === 'wink') { rightPupil.setAttribute('r', '4'); }
+            else if (faceMouth === 'cool') { leftBrow.setAttribute('transform', 'rotate(-10 167 143)'); rightBrow.setAttribute('transform', 'rotate(10 232 143)'); }
+            
+            const leftCheek = document.getElementById('leftCheek');
+            const rightCheek = document.getElementById('rightCheek');
+            leftCheek.setAttribute('opacity', faceMouth === 'love' ? '0.8' : '0.3');
+            rightCheek.setAttribute('opacity', faceMouth === 'love' ? '0.8' : '0.3');
+        }
+        
+        const bounceAnimations = ['bounce1', 'bounce2', 'bounce3', 'shake', 'wiggle'];
+        const clickMessages = [
+            '🤪 อย่ามาจั๊กจี้สิ!', '💙 ชอบจัง~', '✨ กระโดดโลดเต้น', '🎵 เต้นไปกับเรา~', 
+            '🤖 หวัดดีจ้า!', '😊 สวัสดีครับ', '⚡ โอ๊ย! ตกใจ', '💃 หนุกหนาน~', 
+            '🌟 เก่งจังเลย', '🎉 เย้ๆๆ', '🤗 คิดถึงจัง', '💕 รักเลย'
+        ];
+        
+        function playRandomBounce(event) {
+            const robot = document.getElementById('robotContainer');
+            const randomAnim = bounceAnimations[Math.floor(Math.random() * bounceAnimations.length)];
+            bounceAnimations.forEach(anim => robot.classList.remove(anim));
+            void robot.offsetWidth;
+            robot.classList.add(randomAnim);
+            setTimeout(() => {
+                robot.classList.remove(randomAnim);
+            }, 500);
+            
+            const msg = clickMessages[Math.floor(Math.random() * clickMessages.length)];
+            showSpeechBubble(msg);
+            
+            if(event) {
+                createClickFlash(event.clientX, event.clientY);
+                if(Math.random() > 0.7) createFloatingHeart(event.clientX, event.clientY);
+            }
+        }
+        
+        let autoDanceInterval = null;
+        const autoDances = ['autoDance1', 'autoDance2', 'autoDance3'];
+        
+        function startAutoDance() {
+            if(autoDanceInterval) clearInterval(autoDanceInterval);
+            const robot = document.getElementById('robotContainer');
+            robot.classList.add('autoDance1');
+            autoDanceInterval = setInterval(() => {
+                const newDance = autoDances[Math.floor(Math.random() * autoDances.length)];
+                autoDances.forEach(d => robot.classList.remove(d));
+                robot.classList.add(newDance);
+            }, 3000);
+        }
+        
+        function stopAutoDance() {
+            if(autoDanceInterval) clearInterval(autoDanceInterval);
+            const robot = document.getElementById('robotContainer');
+            autoDances.forEach(d => robot.classList.remove(d));
+        }
+        
+        function showSpeechBubble(msg) {
+            const existing = document.querySelector('.speech-bubble');
+            if(existing) existing.remove();
+            const bubble = document.createElement('div');
+            bubble.classList.add('speech-bubble');
+            bubble.textContent = msg;
+            const rect = document.getElementById('robotContainer').getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width/2 - 100) + 'px';
+            bubble.style.top = (rect.top - 60) + 'px';
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 2500);
+        }
+        
+        function openWardrobe() { 
+            if(!localStorage.getItem('is_logged_in')) {
+                showSpeechBubble('🤗 ลงชื่อเข้าใช้ก่อนนะ แล้วจะแต่งตัวให้หนูได้เลย!');
+                openLoginModal();
+                return;
+            }
+            document.getElementById('wardrobeModal').classList.add('active'); 
+        }
+        function closeWardrobe() { document.getElementById('wardrobeModal').classList.remove('active'); }
+        
+        function handleCredentialResponse(response) {
+            const userData = decodeJwtResponse(response.credential);
+            const userEmail = userData.email;
+
+            // 🌟 1. ดักจับอีเมลของครู (Admin) 🌟
+            const adminEmails = ['ratchapon@prot.ac.th']; 
+            
+            if (adminEmails.includes(userEmail)) {
+                localStorage.setItem('student_name', userData.name);
+                localStorage.setItem('student_email', userEmail);
+                localStorage.setItem('student_pic', userData.picture);
+                localStorage.setItem('is_logged_in', 'true');
+                
+                alert('ยินดีต้อนรับเข้าสู่ระบบจัดการของผู้สอนครับ');
+                window.location.href = 'teacher_dashboard.html'; // เด้งไปหน้า Admin ทันที
+                return;
+            }
+
+            // 🌟 2. ถ้าเป็นอีเมลนักเรียนปกติ 🌟
+            if (userEmail.endsWith('@gmail.com') || userEmail.endsWith('@prot.ac.th')) {
+                localStorage.setItem('student_name', userData.name);
+                localStorage.setItem('student_email', userEmail);
+                localStorage.setItem('student_pic', userData.picture);
+                localStorage.setItem('is_logged_in', 'true');
+                
+                closeLoginModal();
+                // สั่งอัปเดตหน้าตาเว็บของแต่ละหน้า
+                if (typeof updateLoginUI === "function") updateLoginUI(userData.name, userData.picture);
+                if (typeof fetchRealtimeData === "function") fetchRealtimeData();
+                if (typeof loadOutfit === "function") loadOutfit();
+            } else {
+                alert('❌ อีเมลนี้ไม่ได้รับอนุญาตให้เข้าสู่ระบบ');
+            }
+        }
+        
+        function updateLoginUI() {
+            const name = localStorage.getItem('student_name');
+            const pic = localStorage.getItem('student_pic');
+            document.getElementById('loginArea').innerHTML = `<div class="user-info"><img src="${pic}" class="user-avatar" alt="avatar"><span class="user-name">${name.split(' ')[0]}</span><button class="logout-btn" onclick="logout()" title="ออกจากระบบ"><i class="fas fa-sign-out-alt"></i></button></div>`;
+        }
+        
+        function logout() {
+            stopAutoDance();
+            localStorage.removeItem('is_logged_in');
+            window.location.reload();
+        }
+        
+        function openLoginModal() { 
+            // 1. เปิดหน้าต่าง Modal ให้แสดงขึ้นมาก่อน
+            document.getElementById('loginModal').classList.add('active'); 
+            
+            // 2. เช็คว่าเด็กเปิดผ่านแอป LINE, IG หรือ Facebook ไหม (ถ้าใช่ให้เตือน)
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            if (ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Line") > -1 || ua.indexOf("Instagram") > -1) {
+                document.getElementById('in-app-warning').style.display = 'block';
+            }
+
+            // 3. สั่งวาดปุ่ม Google "หลังจาก" หน้าต่างเปิดแล้วเท่านั้น (แก้บั๊กปุ่มค้าง/กดไม่ติด 100%)
+            if (window.google && google.accounts) {
+                google.accounts.id.initialize({
+                    client_id: "717590675447-98867qquq15bhc3t5cot57f8c99e5ll3.apps.googleusercontent.com",
+                    callback: handleCredentialResponse,
+                    cancel_on_tap_outside: false
+                });
+                google.accounts.id.renderButton(
+                    document.getElementById("google-login-button"),
+                    { theme: "outline", size: "large", shape: "rectangular", type: "standard", text: "signin_with" }
+                );
+            } else {
+                // กรณีเน็ตช้า สคริปต์ Google โหลดไม่ทัน
+                document.getElementById("google-login-button").innerHTML = "<p style='font-size:0.85rem; color:#ef4444;'>กำลังเชื่อมต่อ Google... กรุณาปิดแล้วกดปุ่มใหม่อีกครั้ง</p>";
+            }
+        }
+        function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); }
+        
+        const themes = { 
+            default: { glowColor: "rgba(59,130,246,0.3)", particleChar: "✨", particleColor: "rgba(59,130,246,0.6)" }, 
+            snow: { glowColor: "rgba(255,255,255,0.5)", particleChar: "❄️", particleColor: "rgba(255,255,255,0.7)" }, 
+            forest: { glowColor: "rgba(100,200,100,0.4)", particleChar: "🍃", particleColor: "rgba(144,238,144,0.6)" }, 
+            halloween: { glowColor: "rgba(255,69,0,0.4)", particleChar: "🎃", particleColor: "rgba(255,69,0,0.5)" }, 
+            love: { glowColor: "rgba(255,105,180,0.4)", particleChar: "🌸", particleColor: "rgba(255,105,180,0.6)" } 
+        };
+
+        let particleInterval = null;
+
+        function startThemeParticles(themeKey) {
+            const container = document.getElementById("particleContainer");
+            if(!container) return;
+            if(particleInterval) clearInterval(particleInterval);
+            container.innerHTML = "";
+            const themeData = themes[themeKey] || themes['default'];
+            
+            function createParticle() {
+                const particle = document.createElement("div");
+                particle.className = "theme-particle";
+                particle.style.left = Math.random() * 100 + "vw";
+                particle.style.top = "-10vh";
+                particle.style.fontSize = (Math.random() * 15 + 15) + "px";
+                particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
+                particle.style.textShadow = `0 0 5px ${themeData.particleColor}`;
+                particle.innerHTML = themeData.particleChar;
+                container.appendChild(particle);
+                setTimeout(() => particle.remove(), 12000);
+            }
+            
+            for(let i = 0; i < 20; i++) setTimeout(createParticle, i * 150);
+            particleInterval = setInterval(createParticle, 500);
+        }
+
+        function applyTheme(themeKey) {
+            document.body.setAttribute("data-theme", themeKey);
+            localStorage.setItem('smart_theme', themeKey);
+            document.getElementById("robotGlow").style.background = `radial-gradient(circle, ${themes[themeKey].glowColor} 0%, rgba(0,0,0,0) 70%)`;
+            
+            // Only show message if user clicked, not on initial load
+            if (event) {
+                const msg = themeKey === 'snow' ? '❄️ ธีมหิมะ เย็นสบาย~' : themeKey === 'forest' ? '🌿 ธีมป่าเขียว สดชื่น!' : themeKey === 'halloween' ? '🎃 ธีมฮัลโลวีน สนุกสุดๆ!' : themeKey === 'love' ? '🌸 ธีมซากุระ หวานละมุน~' : '🤖 ธีมเริ่มต้น คลาสสิค!';
+                showSpeechBubble(msg);
+            }
+            startThemeParticles(themeKey);
+            
+            document.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
+            const activeBtn = document.querySelector(`.theme-btn[data-theme="${themeKey}"]`);
+            if(activeBtn) activeBtn.classList.add("active");
+        }
+        
+        document.getElementById('heroRobot')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(localStorage.getItem('is_logged_in') === 'true') {
+                playRandomBounce(e);
+            } else {
+                showSpeechBubble('🤗 ลงชื่อเข้าใช้ก่อนนะ แล้วจะมาเล่นด้วยกันได้เลย!');
+                openLoginModal();
+            }
+        });
+        
+        document.getElementById('outfitIcon')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openWardrobe();
+        });
+        
+        ['skinColor', 'shirtColor', 'shoeColor', 'faceMouth', 'pattern', 'hatStyle'].forEach(id => 
+            document.getElementById(id)?.addEventListener('change', updateRobotOutfit)
+        );
+        
+        document.querySelectorAll(".theme-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => applyTheme(btn.getAttribute("data-theme")));
+        });
+        
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('smart_theme') || "default";
+            applyTheme(savedTheme);
+            
+            if (localStorage.getItem('is_logged_in') === 'true') { 
+                updateLoginUI(); 
+                document.getElementById('outfitIcon').style.display = 'flex';
+                loadOutfit(); 
+            } else { 
+                document.getElementById('showLoginBtn').addEventListener('click', openLoginModal);
+                document.getElementById('outfitIcon').style.display = 'none';
+                startAutoDance();
+            }
+        };
+    </script>
+</body>
+</html>
