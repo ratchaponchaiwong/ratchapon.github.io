@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -19,9 +18,9 @@
     .metric{display:flex;gap:1rem;align-items:center;min-height:118px}.metric-icon{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:1.45rem;background:rgba(255,255,255,.07);border:1px solid var(--line);flex:0 0 auto}.metric h4{margin:0 0 .2rem;color:var(--muted);font-size:.9rem;font-weight:700}.metric .val{font-size:clamp(1.35rem,2vw,1.7rem);font-weight:800;line-height:1.05}.metric small{color:var(--muted);display:block;margin-top:.35rem;line-height:1.35}.risk-card{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:1rem;align-items:center}.risk-status{font-size:clamp(2.2rem,5vw,4rem);font-weight:800;line-height:1.05;color:var(--green);margin-top:.25rem}.risk-desc{color:#dff8ff;margin-top:.8rem;line-height:1.75}.recommend{margin-top:.9rem;border:1px solid rgba(45,223,146,.22);background:rgba(45,223,146,.08);border-radius:18px;padding:.9rem 1rem;color:#d9fff0;line-height:1.7;font-weight:600}.gauge{width:180px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--green) 0 26%,rgba(255,255,255,.14) 26% 100%);box-shadow:inset 0 0 28px rgba(255,255,255,.06),0 18px 42px rgba(0,0,0,.22);justify-self:end}.gauge:before{content:"";position:absolute;width:128px;height:128px;border-radius:50%;background:#092638;border:1px solid rgba(255,255,255,.08)}.gauge-content{position:relative;text-align:center}.gauge-content strong{display:block;font-size:2.2rem;line-height:1}.gauge-content span{color:var(--muted);font-size:.78rem}
     .bar-list{display:grid;gap:.75rem}.bar-row{display:grid;grid-template-columns:120px 1fr 54px;gap:10px;align-items:center;font-size:.85rem}.bar-row span:first-child{color:#dff8ff}.bar-track{height:11px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.bar-fill{height:100%;width:30%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--mint))}.form-grid{display:grid;grid-template-columns:1.1fr .75fr .75fr;gap:.75rem;margin-bottom:.75rem}.form-grid.two{grid-template-columns:1fr 1fr}.input-group{display:grid;gap:.35rem}label{color:var(--muted);font-size:.82rem;font-weight:700}input{width:100%;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.08);color:var(--text);padding:.68rem .8rem;font:inherit;outline:none}input::placeholder{color:rgba(236,251,255,.42)}input:focus{border-color:rgba(34,211,238,.45);box-shadow:0 0 0 4px rgba(34,211,238,.08)}canvas{width:100%!important;height:95px!important;max-height:95px!important;display:block}.chart-card{padding:.85rem!important}.chart-card .card-head{margin-bottom:.35rem!important}.chart-box{height:95px;max-height:95px;position:relative;overflow:hidden}table{width:100%;border-collapse:collapse;font-size:.86rem;overflow:hidden;border-radius:18px}th,td{text-align:left;padding:.76rem;border-bottom:1px solid var(--line);vertical-align:middle}th{color:var(--muted);background:rgba(255,255,255,.06);white-space:nowrap}tbody tr:hover{background:rgba(255,255,255,.035)}.risk-low{color:var(--green)}.risk-mid{color:var(--yellow)}.risk-high{color:var(--red)}.system-list{display:grid;gap:.7rem}.system-item{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:16px;padding:.82rem;font-size:.9rem}.message{margin-top:.75rem;color:#dff8ff;line-height:1.6;font-size:.88rem}.footer-note{text-align:center;color:var(--muted);font-size:.82rem;margin-top:1rem;padding-bottom:1rem}
     
-    /* Animation สำหรับไซเรนที่เพิ่มเข้ามา */
     @keyframes alert-pulse { 0% { opacity: 1; } 50% { opacity: 0.5; color: #fff; text-shadow: 0 0 10px var(--red); } 100% { opacity: 1; } }
     .siren-active { color: var(--red) !important; animation: alert-pulse 1s infinite; font-weight: bold; }
+    .fault-active { color: var(--yellow) !important; animation: alert-pulse 1s infinite; font-weight: bold; }
 
     @media(max-width:1180px){body{display:block}.sidebar{width:auto;min-height:auto;position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.brand{margin-bottom:0}.side-card{margin-bottom:0}.grid-4{grid-template-columns:repeat(2,1fr)}.grid-2,.grid-main,.grid-3{grid-template-columns:1fr}}@media(max-width:760px){.main{padding:1rem}.sidebar{grid-template-columns:1fr;padding:1rem}.topbar{flex-direction:column}.top-actions{justify-content:flex-start}.grid-4{grid-template-columns:1fr}.form-grid,.form-grid.two{grid-template-columns:1fr}.risk-card{grid-template-columns:1fr}.gauge{justify-self:start;width:165px}.table-scroll{overflow-x:auto}.bar-row{grid-template-columns:1fr}}
   </style>
@@ -35,22 +34,48 @@
       <div class="status-row"><span><i class="fa-solid fa-battery-three-quarters" style="color:var(--green)"></i> LiFePO4 Battery</span><strong id="batteryLevel">91%</strong></div>
       <div class="status-row"><span><i class="fa-solid fa-solar-panel" style="color:var(--yellow)"></i> Solar Panel</span><strong class="risk-mid">กำลังชาร์จ</strong></div>
       <div class="status-row"><span><i class="fa-solid fa-volume-high" style="color:var(--red)"></i> ไซเรนหน้าบ่อ</span><strong id="sirenStatusSide" class="risk-low">สแตนด์บาย</strong></div>
+      <div class="status-row" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 5px; padding-top: 10px;">
+        <span><i class="fa-solid fa-tower-broadcast" style="color:var(--purple)"></i> สถานะเซนเซอร์</span>
+        <strong id="sensorHealthStatus" class="risk-low">ปกติ (100%)</strong>
+      </div>
+      <div class="message" id="sensorFaultMsg" style="display:none; color:var(--yellow); font-size:0.8rem; border:1px solid var(--yellow); padding:8px; border-radius:8px; margin-top:8px; background:rgba(245,197,66,0.1);"></div>
     </div>
-    <div class="side-card"><h4><i class="fa-solid fa-robot"></i> AI Model</h4><div class="status-row"><span>Model</span><strong>AquaTurn-Risk v1.2</strong></div><div class="status-row"><span>Type</span><strong>Risk Classification</strong></div><div class="status-row"><span>Source</span><strong id="sourceTextSide">Field Log</strong></div><div class="status-row"><span>Confidence</span><strong id="confidenceSide">--</strong></div></div>
+    <div class="side-card"><h4><i class="fa-solid fa-robot"></i> AI Model</h4>
+      <div class="status-row"><span>Model</span><strong>AquaTurn-Risk v1.2</strong></div>
+      <div class="status-row"><span>Type</span><strong>Risk Classification</strong></div>
+      <div class="status-row"><span>Source</span><strong id="sourceTextSide">Field Log</strong></div>
+      <div class="status-row"><span>Confidence</span><strong id="confidenceSide">--</strong></div>
+      <div id="fallbackBadge" style="display:none; text-align:center; margin-top:10px; padding:5px; background:rgba(239,68,68,0.2); border:1px solid var(--red); border-radius:8px; font-size:0.8rem; color:var(--red);">
+        <i class="fa-solid fa-triangle-exclamation"></i> ทำงานในโหมด Fallback (ดึงออนไลน์สำรอง)
+      </div>
+    </div>
     <div class="side-card"><h4><i class="fa-brands fa-telegram"></i> แจ้งเตือนเกษตรกร</h4><button class="telegram" id="sendTelegramSide"><i class="fa-solid fa-paper-plane"></i> ส่ง/แสดงรายงาน Telegram</button><div class="message" id="sideMessage">พร้อมส่งจริงผ่าน Telegram Apps Script URL ที่ตั้งค่าไว้</div></div>
   </aside>
 
   <main class="main">
     <div class="topbar"><div><h1>บ่อปลาทับทิม 01</h1><p class="subtitle">ระบบวิเคราะห์ความเสี่ยงปลาน็อกน้ำจากค่าน้ำ ข้อมูลอากาศหน้าบ่อ และพยากรณ์อากาศออนไลน์ตามพิกัด</p></div><div class="top-actions"><span class="pill">ตำแหน่ง: <strong id="topLocation">ลาดกระบัง กรุงเทพมหานคร</strong></span><span class="pill">อัปเดตล่าสุด: <strong id="lastUpdate">--</strong></span></div></div>
 
-    <section class="grid-4"><div class="card metric"><div class="metric-icon" style="color:var(--blue)"><i class="fa-solid fa-temperature-half"></i></div><div><h4>อุณหภูมิน้ำ</h4><div class="val" id="waterTemp">--</div><small>ทุ่นตรวจวัด</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--green)"><i class="fa-solid fa-flask"></i></div><div><h4>ค่า pH</h4><div class="val" id="phValue">--</div><small>ความเป็นกรด–ด่าง</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--purple)"><i class="fa-solid fa-droplet"></i></div><div><h4>TDS</h4><div class="val" id="tdsValue">--</div><small>เทียบกับค่าปกติของบ่อ</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--yellow)"><i class="fa-solid fa-eye-dropper"></i></div><div><h4>ความขุ่น</h4><div class="val" id="turbidity">--</div><small>ติดตามหลังฝน/ตะกอนกวน</small></div></div></section>
+    <section class="grid-4"><div class="card metric"><div class="metric-icon" style="color:var(--blue)"><i class="fa-solid fa-temperature-half"></i></div><div><h4>อุณหภูมิน้ำ</h4><div class="val" id="waterTemp">--</div><small id="waterTempSource">ทุ่นตรวจวัด</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--green)"><i class="fa-solid fa-flask"></i></div><div><h4>ค่า pH</h4><div class="val" id="phValue">--</div><small>ความเป็นกรด–ด่าง</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--purple)"><i class="fa-solid fa-droplet"></i></div><div><h4>TDS</h4><div class="val" id="tdsValue">--</div><small>เทียบกับค่าปกติของบ่อ</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--yellow)"><i class="fa-solid fa-eye-dropper"></i></div><div><h4>ความขุ่น</h4><div class="val" id="turbidity">--</div><small>ติดตามหลังฝน/ตะกอนกวน</small></div></div></section>
 
     <section class="grid-2"><div class="card"><div class="risk-card"><div><div class="card-head" style="margin-bottom:.2rem"><div><h3><i class="fa-solid fa-brain" style="color:var(--blue)"></i> AI Risk Assessment</h3><p>AquaTurn-Risk Model v1.2</p></div><span class="badge"><span class="dot"></span>Model Loaded</span></div><div class="risk-status" id="riskText">ปกติ</div><p class="risk-desc" id="riskDesc">โมเดลประเมินจากค่าน้ำล่าสุด ข้อมูลอากาศหน้าบ่อ ข้อมูลอากาศออนไลน์ และแนวโน้มย้อนหลังของบ่อ</p><div class="recommend" id="recommendText">ค่าปัจจุบันอยู่ในช่วงปลอดภัย ติดตามข้อมูลตามรอบเวลา และเฝ้าดูแนวโน้มอากาศต่อเนื่อง</div><div class="button-row"><button class="primary" id="sendTelegramBtn"><i class="fa-brands fa-telegram"></i> ส่ง/แสดงรายงาน</button><button id="downloadCsvBtn"><i class="fa-solid fa-file-csv"></i> ดาวน์โหลด CSV</button></div></div><div class="gauge" id="gauge"><div class="gauge-content"><strong id="riskScore">--</strong><span>Risk Score / 100</span></div></div></div></div>
     <div class="card"><div class="card-head"><div><h3><i class="fa-solid fa-ranking-star" style="color:var(--mint)"></i> ปัจจัยที่มีผลต่อการประเมิน</h3><p>ค่าร้อยละแสดงอิทธิพลของปัจจัยต่อผลประเมินครั้งล่าสุด</p></div></div><div class="bar-list"><div class="bar-row"><span>อุณหภูมิน้ำ</span><div class="bar-track"><div class="bar-fill" id="fWater"></div></div><strong id="fWaterT">--</strong></div><div class="bar-row"><span>ความชื้น/ฝน</span><div class="bar-track"><div class="bar-fill" id="fRain"></div></div><strong id="fRainT">--</strong></div><div class="bar-row"><span>pH/TDS</span><div class="bar-track"><div class="bar-fill" id="fChem"></div></div><strong id="fChemT">--</strong></div><div class="bar-row"><span>ความขุ่น</span><div class="bar-track"><div class="bar-fill" id="fTurb"></div></div><strong id="fTurbT">--</strong></div></div><div class="system-list" style="margin-top:1rem"><div class="system-item"><span>Model confidence</span><strong id="confidenceText">--</strong></div><div class="system-item"><span>Training source</span><strong id="modelSource">Field Log / Google Sheets</strong></div></div></div></section>
 
     <section class="grid-3"><div class="card metric"><div class="metric-icon" style="color:var(--orange)"><i class="fa-solid fa-cloud-sun"></i></div><div><h4>อุณหภูมิออนไลน์</h4><div class="val" id="onlineTemp">31.0°C</div><small>ลาดกระบังกลางวันควรอยู่ราว 31–34°C</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--purple)"><i class="fa-solid fa-water"></i></div><div><h4>ความชื้นออนไลน์</h4><div class="val" id="onlineHumidity">75%</div><small>เทียบกับเซนเซอร์หน้าบ่อ</small></div></div><div class="card metric"><div class="metric-icon" style="color:var(--yellow)"><i class="fa-solid fa-cloud-rain"></i></div><div><h4>โอกาสฝนช่วงถัดไป</h4><div class="val" id="rainChance">30%</div><small id="weatherCondition">มีเมฆมาก</small></div></div></section>
+    
+    <section class="grid-3" style="margin-top:-0.5rem; margin-bottom:1rem;">
+      <div class="card metric"><div class="metric-icon" style="color:var(--muted)"><i class="fa-solid fa-gauge-high"></i></div><div><h4>ความกดอากาศ</h4><div class="val" id="onlinePressure">1012 hPa</div><small>ตัวชี้วัดความกดอากาศพายุ</small></div></div>
+      <div class="card metric"><div class="metric-icon" style="color:#fcd34d"><i class="fa-solid fa-sun"></i></div><div><h4>รังสีดวงอาทิตย์</h4><div class="val" id="onlineSolar">850 W/m²</div><small>ปัจจัยการสังเคราะห์แสง</small></div></div>
+      <div class="card metric"><div class="metric-icon" style="color:var(--blue)"><i class="fa-solid fa-droplet"></i></div><div><h4>จุดน้ำค้าง (Dew Point)</h4><div class="val" id="onlineDew">26.0°C</div><small>ประเมินอัตราการระเหย</small></div></div>
+    </section>
 
-    <section class="grid-2"><div class="card"><div class="card-head"><div><h3><i class="fa-solid fa-map-location-dot"></i> ตำแหน่งและแหล่งข้อมูล</h3><p>ระบุพิกัดเพื่อดึงอากาศออนไลน์ และเชื่อม Google Sheets สำหรับข้อมูลย้อนหลัง</p></div><span class="badge">Data Source</span></div><div class="form-grid"><div class="input-group"><label for="pondName">ชื่อบ่อ / สถานที่</label><input id="pondName" type="text" value="บ่อปลาทับทิม 01 | ลาดกระบัง กรุงเทพมหานคร"></div><div class="input-group"><label for="latitude">Latitude</label><input id="latitude" type="number" step="0.000001" value="13.721900"></div><div class="input-group"><label for="longitude">Longitude</label><input id="longitude" type="number" step="0.000001" value="100.780900"></div></div><div class="form-grid two"><div class="input-group"><label for="sheetUrl">Google Sheets CSV / Apps Script URL</label><input id="sheetUrl" type="text" placeholder="วางลิงก์ข้อมูลย้อนหลัง"></div><div class="input-group"><label for="telegramUrl">Telegram Apps Script URL</label><input id="telegramUrl" type="text" value="https://script.google.com/macros/s/AKfycbxnhyp5nnznhDvE-U7nIS6OFDC9WnUUj_qzV03pm0-Pq4WAw06Fd0cUqCZTA9gK35I/exec" placeholder="วาง URL สำหรับส่ง/แสดงรายงาน"></div></div><div class="button-row"><button class="primary" id="saveConfigBtn">บันทึกการตั้งค่า</button><button id="fetchWeatherBtn">ดึงอากาศออนไลน์</button><button id="loadSheetBtn">ดึงข้อมูลจาก Google Sheets</button></div><div class="message" id="dataMessage">พร้อมแสดงข้อมูลภาคสนาม และสามารถเชื่อม Google Sheets เพื่อใช้ข้อมูลย้อนหลังจริง</div></div>
+    <section class="grid-2"><div class="card"><div class="card-head"><div><h3><i class="fa-solid fa-map-location-dot"></i> ตำแหน่งและแหล่งข้อมูล</h3><p>ระบุพิกัดเพื่อดึงอากาศออนไลน์ และเชื่อม Google Sheets สำหรับข้อมูลย้อนหลัง</p></div><span class="badge">Data Source</span></div><div class="form-grid"><div class="input-group"><label for="pondName">ชื่อบ่อ / สถานที่</label><input id="pondName" type="text" value="บ่อปลาทับทิม 01 | ลาดกระบัง กรุงเทพมหานคร"></div><div class="input-group"><label for="latitude">Latitude</label><input id="latitude" type="number" step="0.000001" value="13.721900"></div><div class="input-group"><label for="longitude">Longitude</label><input id="longitude" type="number" step="0.000001" value="100.780900"></div></div><div class="form-grid two"><div class="input-group"><label for="sheetUrl">Google Sheets CSV / Apps Script URL</label><input id="sheetUrl" type="text" placeholder="วางลิงก์ข้อมูลย้อนหลัง"></div><div class="input-group"><label for="telegramUrl">Telegram Apps Script URL</label><input id="telegramUrl" type="text" value="https://script.google.com/macros/s/AKfycbxnhyp5nnznhDvE-U7nIS6OFDC9WnUUj_qzV03pm0-Pq4WAw06Fd0cUqCZTA9gK35I/exec" placeholder="วาง URL สำหรับส่ง/แสดงรายงาน"></div></div>
+    <div class="button-row">
+      <button class="primary" id="saveConfigBtn">บันทึกการตั้งค่า</button>
+      <button id="fetchWeatherBtn">ดึงอากาศออนไลน์</button>
+      <button id="loadSheetBtn">ดึงข้อมูลจาก Google Sheets</button>
+      <button id="simFaultBtn" style="border-color:var(--yellow); color:var(--yellow)"><i class="fa-solid fa-triangle-exclamation"></i> ⚠️ จำลองเซนเซอร์พัง</button>
+    </div>
+    <div class="message" id="dataMessage">พร้อมแสดงข้อมูลภาคสนาม และสามารถเชื่อม Google Sheets เพื่อใช้ข้อมูลย้อนหลังจริง</div></div>
     <div class="card"><div class="card-head"><div><h3><i class="fa-solid fa-temperature-high"></i> อากาศหน้าบ่อและพยากรณ์ออนไลน์</h3><p>ใช้เทียบค่าจริงบริเวณบ่อกับค่าจากพิกัดออนไลน์</p></div></div><div class="grid-2" style="margin-bottom:0"><div class="metric card" style="box-shadow:none;background:rgba(255,255,255,.05)"><div class="metric-icon" style="color:var(--orange)"><i class="fa-solid fa-location-crosshairs"></i></div><div><h4>อุณหภูมิหน้าบ่อ</h4><div class="val" id="localAirTemp">--</div><small>เซนเซอร์บริเวณบ่อ</small></div></div><div class="metric card" style="box-shadow:none;background:rgba(255,255,255,.05)"><div class="metric-icon" style="color:var(--blue)"><i class="fa-solid fa-code-compare"></i></div><div><h4>ผลต่างอุณหภูมิ</h4><div class="val" id="tempDiff">--</div><small>หน้าบ่อ − ออนไลน์</small></div></div></div></div></section>
 
     <section class="grid-main"><div class="card chart-card"><div class="card-head"><div><h3><i class="fa-solid fa-chart-line"></i> กราฟแนวโน้ม Risk Score</h3><p>กราฟขนาดเล็กแบบไฟล์ล่าสุด แสดงเฉพาะแนวโน้มสำคัญ</p></div></div><div class="chart-box"><div class="chart-box"><canvas id="riskChart" width="900" height="95"></canvas></div></div></div><div class="card"><div class="card-head"><div><h3><i class="fa-solid fa-filter"></i> ตัวกรองข้อมูลย้อนหลัง</h3><p>เลือกช่วงข้อมูลย้อนหลังได้ โดยกราฟจะย่อจำนวนจุดให้อ่านง่าย</p></div></div><div class="button-row"><button data-days="10">10 วัน</button><button data-days="20">20 วัน</button><button data-days="30">30 วัน</button><button data-days="40">40 วัน</button><button data-days="50">50 วัน</button></div><div class="form-grid two" style="margin-top:.8rem"><div class="input-group"><label for="fromDate">เริ่มต้น</label><input id="fromDate" type="datetime-local"></div><div class="input-group"><label for="toDate">สิ้นสุด</label><input id="toDate" type="datetime-local"></div></div><div class="button-row"><button class="primary" id="applyDateBtn">แสดงตามวันเวลา</button><button id="resetFilterBtn">แสดงล่าสุด</button></div><div class="system-list" style="margin-top:1rem"><div class="system-item"><span>จำนวนข้อมูลที่แสดง</span><strong id="rowCount">--</strong></div><div class="system-item"><span>แหล่งข้อมูล</span><strong id="sourceText">Field Log</strong></div><div class="system-item"><span>CSV</span><strong>Export enabled</strong></div></div></div></section>
@@ -66,8 +91,13 @@
     const DEFAULT_TELEGRAM_URL = "https://script.google.com/macros/s/AKfycbxnhyp5nnznhDvE-U7nIS6OFDC9WnUUj_qzV03pm0-Pq4WAw06Fd0cUqCZTA9gK35I/exec";
     let config = JSON.parse(localStorage.getItem('aquaturn_config_final') || '{}');
     let locationData = { name: config.pondName || 'บ่อปลาทับทิม 01 | ลาดกระบัง กรุงเทพมหานคร', latitude: Number(config.latitude || 13.721900), longitude: Number(config.longitude || 100.780900) };
-    let weatherData = { onlineTemp:31.0, onlineHumidity:75, rainChance:30, highTemp:34, lowTemp:28, condition:'มีเมฆมาก', windSpeed:9.2 };
+    
+    // อัปเดตข้อมูลออนไลน์เริ่มต้นให้มีครบ
+    let weatherData = { onlineTemp:31.0, onlineHumidity:75, rainChance:30, highTemp:34, lowTemp:28, condition:'มีเมฆมาก', windSpeed:9.2, pressure:1012, solarRad:850, dewPoint:26.0 };
     let charts = {};
+    let isSimulatingFault = false; // ตัวแปรสำหรับจำลองเซนเซอร์พัง
+    let currentFaults = []; // เก็บรายการเซนเซอร์ที่เสีย
+
     function pad(n){return String(n).padStart(2,'0')} function noise(seed,amp=1){const x=Math.sin(seed*12.9898)*43758.5453;return (x-Math.floor(x)-.5)*2*amp} function displayTime(dt){return dt.toLocaleString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})} function formatDateInput(date){return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`} function setText(id,value){const el=$(id);if(el)el.textContent=value}
     function riskInfo(score){if(score>=75)return{text:'วิกฤต',color:'#fb7185',className:'risk-high'};if(score>=50)return{text:'เฝ้าระวัง',color:'#f5c542',className:'risk-mid'};return{text:'ปกติ',color:'#22c55e',className:'risk-low'}} function adviceFromRisk(score){if(score>=75)return'เปิดเครื่องตีน้ำ เพิ่มออกซิเจน และตรวจสอบบ่อทันที';if(score>=50)return'เฝ้าระวังใกล้ชิดและเตรียมเครื่องตีน้ำ';return'ติดตามข้อมูลตามรอบเวลา'}
     function createHistoryDays(days){const data=[],now=new Date(),latestMinute=now.getHours()<6?18*60+5:Math.min(now.getHours()*60+now.getMinutes(),18*60+5),startMinute=6*60+7;for(let d=days-1;d>=0;d--){const date=new Date(now);date.setDate(now.getDate()-d);date.setHours(0,0,0,0);const isToday=d===0,endMinute=isToday?latestMinute:18*60+5;for(let minute=startMinute,idx=0;minute<=endMinute;minute+=15,idx++){const jitter=Math.round(noise(d*100+idx,3)),actualMinute=Math.max(startMinute,Math.min(endMinute,minute+jitter)),hour=Math.floor(actualMinute/60),min=actualMinute%60,dt=new Date(date);dt.setHours(hour,min,0,0);const dayFactor=Math.sin((days-d)/6.5),daySeed=days-d,t=actualMinute/60,noon=Math.max(0,Math.sin((t-7)/11*Math.PI)),after=Math.max(0,Math.sin((t-9)/9*Math.PI)),rainEvent=(daySeed%11===0||daySeed%17===0)&&t>=11&&t<=14.5,rainBump=rainEvent?5+Math.max(0,Math.sin((t-11)/3.5*Math.PI))*7:0;const onlineTemp=28.2+noon*5.2+dayFactor*.4+noise(daySeed+idx,.25),onlineHumidity=72+Math.max(0,1-noon)*7+(rainEvent?8:0)+noise(daySeed*2+idx,1.5),localAirTemp=onlineTemp+.1+after*.45+noise(daySeed*3+idx,.25),localHumidity=onlineHumidity+noise(daySeed*4+idx,2)+(rainEvent?2:0),waterTemp=27.6+after*2.5+dayFactor*.15+noise(daySeed*5+idx,.08),ph=7.48-rainBump*.012+noise(daySeed*6+idx,.035),tds=382+after*24+dayFactor*6+rainBump*1.2+noise(daySeed*7+idx,3),turbidity=20+after*7+rainBump*.85+noise(daySeed*8+idx,1.4);let risk=Math.max(0,waterTemp-29)*8+Math.max(0,localHumidity-76)*1.2+Math.max(0,tds-395)*.45+Math.max(0,turbidity-25)*1.1+Math.abs(ph-7.4)*18+(rainEvent?8:0)+18;risk=Math.max(18,Math.min(78,Math.round(risk)));data.push({datetime:dt.toISOString(),displayTime:displayTime(dt),waterTemp:+waterTemp.toFixed(1),ph:+ph.toFixed(1),tds:Math.round(tds),turbidity:Math.round(turbidity),localAirTemp:+localAirTemp.toFixed(1),localHumidity:Math.round(localHumidity),onlineTemp:+onlineTemp.toFixed(1),onlineHumidity:Math.round(onlineHumidity),risk,advice:adviceFromRisk(risk)})}}return data.sort((a,b)=>new Date(a.datetime)-new Date(b.datetime))}
@@ -75,11 +105,67 @@
     function confidence(row){return row.risk<50?Math.min(94,82+Math.round((50-row.risk)/5)):Math.min(91,76+Math.round((row.risk-50)/6))}
     function setFeatureBars(row){const waterRaw=Math.max(0,(row.waterTemp-28)*16),rainRaw=Math.max(0,(row.localHumidity-70)*1.2+(weatherData.rainChance/8)),chemRaw=Math.max(0,Math.abs(row.ph-7.4)*28+Math.max(0,row.tds-380)*.12),turbRaw=Math.max(0,row.turbidity*.65),total=waterRaw+rainRaw+chemRaw+turbRaw||1;[["fWater","fWaterT",Math.round(waterRaw/total*100)],["fRain","fRainT",Math.round(rainRaw/total*100)],["fChem","fChemT",Math.round(chemRaw/total*100)],["fTurb","fTurbT",Math.round(turbRaw/total*100)]].forEach(([bar,text,val])=>{$(bar).style.width=Math.max(8,val)+'%';setText(text,val+'%')})}
     function makeForecast(latest){forecastRisk=[0,15,30,45,60,75,90].map((min,i)=>{const drift=Math.sin(i/6*Math.PI)*8,weatherPush=Math.max(0,weatherData.rainChance-35)*.12,value=Math.max(18,Math.min(80,Math.round(latest.risk+drift+weatherPush-i*.4)));return{time:i===0?'ตอนนี้':`+${min} นาที`,risk:value}})}
+    
     function applyLatest(){
-      const latest=filteredData[filteredData.length-1]||allData[allData.length-1],risk=riskInfo(latest.risk);
-      setText('lastUpdate',latest.displayTime);setText('topLocation',locationData.name.replace('บ่อปลาทับทิม 01 | ',''));setText('waterTemp',latest.waterTemp.toFixed(1)+'°C');setText('phValue',latest.ph.toFixed(1));setText('tdsValue',Math.round(latest.tds)+' ppm');setText('turbidity',Math.round(latest.turbidity)+' NTU');setText('localAirTemp',latest.localAirTemp.toFixed(1)+'°C');setText('riskText',risk.text);setText('riskScore',latest.risk);setText('confidenceText',confidence(latest)+'%');setText('confidenceSide',confidence(latest)+'%');$('riskText').style.color=risk.color;$('gauge').style.background=`conic-gradient(${risk.color} 0 ${latest.risk}%, rgba(255,255,255,.14) ${latest.risk}% 100%)`;
+      const rawLatest=filteredData[filteredData.length-1]||allData[allData.length-1];
+      // สร้าง copy เพื่อไม่กระทบข้อมูลหลัก
+      let latest = {...rawLatest};
+      
+      // --- Logic: Data Validation & Fallback Mechanism ---
+      currentFaults = [];
+      let confScore = confidence(latest);
+      
+      if (isSimulatingFault) {
+          latest.waterTemp = 0; // จำลองว่าเซนเซอร์พัง ส่งค่า 0 มา
+      }
+
+      let isFallback = false;
+      let displayWaterTemp = latest.waterTemp;
+      let sourceMsg = "ทุ่นตรวจวัด";
+
+      if (latest.waterTemp <= 0 || latest.waterTemp === null) {
+          currentFaults.push("อุณหภูมิน้ำ");
+          displayWaterTemp = weatherData.onlineTemp; // สลับใช้ข้อมูลออนไลน์อัตโนมัติ
+          isFallback = true;
+          confScore -= 30; // ลดความน่าเชื่อถือลง
+          sourceMsg = "⚠️ ออนไลน์ (Fallback)";
+      }
+
+      const risk=riskInfo(latest.risk);
+      setText('lastUpdate',latest.displayTime);
+      setText('topLocation',locationData.name.replace('บ่อปลาทับทิม 01 | ',''));
+      
+      // อัปเดต UI เซนเซอร์
+      setText('waterTemp',displayWaterTemp.toFixed(1)+'°C');
+      setText('waterTempSource', sourceMsg);
+      $('waterTemp').style.color = isFallback ? 'var(--yellow)' : '';
+      
+      setText('phValue',latest.ph.toFixed(1));
+      setText('tdsValue',Math.round(latest.tds)+' ppm');
+      setText('turbidity',Math.round(latest.turbidity)+' NTU');
+      setText('localAirTemp',latest.localAirTemp.toFixed(1)+'°C');
+      setText('riskText',risk.text);
+      setText('riskScore',latest.risk);
+      setText('confidenceText',confScore+'%');
+      setText('confidenceSide',confScore+'%');
+      $('riskText').style.color=risk.color;
+      $('gauge').style.background=`conic-gradient(${risk.color} 0 ${latest.risk}%, rgba(255,255,255,.14) ${latest.risk}% 100%)`;
       const tempDiff=latest.localAirTemp-weatherData.onlineTemp;setText('tempDiff',(tempDiff>=0?'+':'')+tempDiff.toFixed(1)+'°C');
       
+      // อัปเดต Sensor Health Monitor
+      if(currentFaults.length > 0) {
+          setText('sensorHealthStatus', 'ขัดข้อง ('+confScore+'%)');
+          $('sensorHealthStatus').className = 'risk-high';
+          $('sensorFaultMsg').style.display = 'block';
+          $('sensorFaultMsg').innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> พบปัญหาเซนเซอร์: ' + currentFaults.join(', ');
+          $('fallbackBadge').style.display = 'block';
+      } else {
+          setText('sensorHealthStatus', 'ปกติ (100%)');
+          $('sensorHealthStatus').className = 'risk-low';
+          $('sensorFaultMsg').style.display = 'none';
+          $('fallbackBadge').style.display = 'none';
+      }
+
       // อัปเดตสถานะไซเรนในกล่องแนะนำตามความเสี่ยง AI
       if(latest.risk>=75){
         setText('sirenStatusSide','🚨 ทำงาน');
@@ -99,8 +185,37 @@
       }
       setFeatureBars(latest);makeForecast(latest)
     }
-    function renderWeather(){setText('onlineTemp',weatherData.onlineTemp.toFixed(1)+'°C');setText('onlineHumidity',Math.round(weatherData.onlineHumidity)+'%');setText('rainChance',Math.round(weatherData.rainChance)+'%');setText('weatherCondition',weatherData.condition)}
-    async function fetchWeather(){const lat=Number($('latitude').value),lon=Number($('longitude').value);if(!Number.isFinite(lat)||!Number.isFinite(lon))return;try{const params=new URLSearchParams({latitude:lat,longitude:lon,current:'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m',hourly:'precipitation_probability',daily:'temperature_2m_max,temperature_2m_min',forecast_days:'1',forecast_hours:'2',timezone:'Asia/Bangkok'});const res=await fetch('https://api.open-meteo.com/v1/forecast?'+params.toString());if(!res.ok)throw new Error('weather');const data=await res.json();weatherData.onlineTemp=Number(data.current?.temperature_2m??weatherData.onlineTemp);weatherData.onlineHumidity=Number(data.current?.relative_humidity_2m??weatherData.onlineHumidity);weatherData.rainChance=Number((data.hourly?.precipitation_probability||[weatherData.rainChance])[0]);weatherData.condition=weatherCodeText(data.current?.weather_code);setText('dataMessage','ดึงข้อมูลอากาศออนไลน์ตามพิกัดเรียบร้อย');renderAll()}catch{setText('dataMessage','ดึงข้อมูลอากาศออนไลน์ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต')}}
+
+    function renderWeather(){
+      setText('onlineTemp',weatherData.onlineTemp.toFixed(1)+'°C');
+      setText('onlineHumidity',Math.round(weatherData.onlineHumidity)+'%');
+      setText('rainChance',Math.round(weatherData.rainChance)+'%');
+      setText('weatherCondition',weatherData.condition);
+      // อัปเดตข้อมูลวิเคราะห์เชิงลึก
+      setText('onlinePressure', weatherData.pressure + ' hPa');
+      setText('onlineSolar', weatherData.solarRad + ' W/m²');
+      setText('onlineDew', weatherData.dewPoint.toFixed(1) + '°C');
+    }
+
+    async function fetchWeather(){const lat=Number($('latitude').value),lon=Number($('longitude').value);if(!Number.isFinite(lat)||!Number.isFinite(lon))return;try{
+      // ดึงข้อมูล API รวมข้อมูลใหม่ (surface_pressure, dewpoint_2m)
+      const params=new URLSearchParams({latitude:lat,longitude:lon,current:'temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,surface_pressure,dewpoint_2m',hourly:'precipitation_probability',timezone:'Asia/Bangkok'});
+      const res=await fetch('https://api.open-meteo.com/v1/forecast?'+params.toString());if(!res.ok)throw new Error('weather');const data=await res.json();
+      
+      weatherData.onlineTemp=Number(data.current?.temperature_2m??weatherData.onlineTemp);
+      weatherData.onlineHumidity=Number(data.current?.relative_humidity_2m??weatherData.onlineHumidity);
+      weatherData.pressure=Number(data.current?.surface_pressure??weatherData.pressure);
+      weatherData.dewPoint=Number(data.current?.dewpoint_2m??weatherData.dewPoint);
+      weatherData.rainChance=Number((data.hourly?.precipitation_probability||[weatherData.rainChance])[0]);
+      weatherData.condition=weatherCodeText(data.current?.weather_code);
+      
+      // จำลองค่า Solar Radiation ตามช่วงเวลา (เพราะ API ฟรีบางตัวไม่ได้ให้ค่าสด)
+      const hr = new Date().getHours();
+      weatherData.solarRad = (hr > 6 && hr < 18) ? Math.round(Math.sin((hr-6)/12 * Math.PI) * 900) : 0;
+
+      setText('dataMessage','ดึงข้อมูลอากาศออนไลน์ตามพิกัดเรียบร้อย');renderAll()}catch{setText('dataMessage','ดึงข้อมูลอากาศออนไลน์ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต')}
+    }
+
     function weatherCodeText(code){const map={0:'ท้องฟ้าแจ่มใส',1:'มีเมฆเล็กน้อย',2:'มีเมฆบางส่วน',3:'มีเมฆมาก',45:'หมอก',51:'ฝนปรอยเบา',61:'ฝนเล็กน้อย',63:'ฝนปานกลาง',65:'ฝนหนัก',80:'ฝนเป็นช่วง',95:'พายุฝนฟ้าคะนอง'};return map[code]||'ติดตามสภาพอากาศ'}
     function saveConfig(){config={pondName:$('pondName').value.trim(),latitude:$('latitude').value,longitude:$('longitude').value,sheetUrl:$('sheetUrl').value.trim(),telegramUrl:$('telegramUrl').value.trim()};localStorage.setItem('aquaturn_config_final',JSON.stringify(config));locationData.name=config.pondName||locationData.name;locationData.latitude=Number(config.latitude||locationData.latitude);locationData.longitude=Number(config.longitude||locationData.longitude);setText('dataMessage','บันทึกการตั้งค่าเรียบร้อย');renderAll()}
     async function loadGoogleSheets(){const url=$('sheetUrl').value.trim()||config.sheetUrl;if(!url){setText('dataMessage','กรุณาใส่ลิงก์ Google Sheets CSV หรือ Apps Script URL');return}try{const res=await fetch(url);if(!res.ok)throw new Error('sheet');const text=await res.text();let rows;try{rows=JSON.parse(text)}catch{rows=parseCsv(text)}if(!Array.isArray(rows)||rows.length===0)throw new Error('empty');allData=rows.map(normalizeRow).filter(Boolean).sort((a,b)=>new Date(a.datetime)-new Date(b.datetime));filteredData=allData.slice(-12);setText('sourceText','Google Sheets');setText('sourceTextSide','Google Sheets');setText('modelSource','Google Sheets history');setText('dataMessage','ดึงข้อมูลจาก Google Sheets เรียบร้อย');renderAll()}catch{setText('dataMessage','ไม่สามารถดึงข้อมูลจาก Google Sheets ได้ ตรวจสอบลิงก์และสิทธิ์การเข้าถึง')}}
@@ -109,19 +224,20 @@
     function filterDays(days){const latest=new Date(allData[allData.length-1].datetime),start=new Date(latest);start.setDate(latest.getDate()-days);filteredData=allData.filter(row=>new Date(row.datetime)>=start);if(filteredData.length>800)filteredData=filteredData.slice(-800);renderAll()}
     function filterDateRange(){const from=$('fromDate').value?new Date($('fromDate').value):null,to=$('toDate').value?new Date($('toDate').value):null;filteredData=allData.filter(row=>{const dt=new Date(row.datetime);if(from&&dt<from)return false;if(to&&dt>to)return false;return true});if(filteredData.length>800)filteredData=filteredData.slice(-800);renderAll()}
     function resetFilter(){filteredData=allData.slice(-12);renderAll()}
+    
     function sendTelegram() {
       const latest = filteredData[filteredData.length - 1];
       
-      // ดึงสถานะ
+      // อัปเกรดข้อความ Telegram แบบตัวหนาและมี Emoji
       let riskStatus = "✅ ปกติ";
       let sirenText = "⚪ สแตนด์บาย";
+      let sensorFaultWarn = currentFaults.length > 0 ? `\n⚠️ **พบเซนเซอร์ขัดข้อง:** ${currentFaults.join(', ')} (ใช้ข้อมูลออนไลน์สำรอง)` : "";
+
       let msg = "";
 
       if (latest.risk >= 75) {
-        // กรณีวิกฤต: ใช้ตัวหนา (**) และตัวพิมพ์ใหญ่ พร้อม Emoji ดึงดูดสายตา
         riskStatus = "🔴 วิกฤต (CRITICAL)";
         sirenText = "🚨 **ทำงาน (ACTIVE)**";
-        
         msg = 
           `‼️ **AQUATURN AI: แจ้งเตือนด่วนที่สุด** ‼️\n` +
           `━━━━━━━━━━━━━━━━━━\n` +
@@ -129,28 +245,26 @@
           `⏰ **เวลา:** ${latest.displayTime}\n\n` +
           `⚠️ **สถานะ:** ${riskStatus} (${latest.risk}/100)\n` +
           `🌡️ **อุณหภูมิน้ำ:** ${latest.waterTemp.toFixed(1)}°C\n` +
-          `🌧️ **โอกาสฝนตก:** ${Math.round(latest.rainChance)}%\n\n` +
-          `🔊 **ไซเรนหน้าบ่อ:** ${sirenText}\n` +
+          `🌧️ **โอกาสฝนตก:** ${Math.round(weatherData.rainChance)}%\n` +
+          `🔊 **ไซเรนหน้าบ่อ:** ${sirenText}${sensorFaultWarn}\n\n` +
           `🛠️ **คำแนะนำ:** **${latest.advice}**\n` +
           `━━━━━━━━━━━━━━━━━━`;
       } else {
-        // กรณีปกติ: ข้อความสบายตา ไม่ต้องหนาทุกบรรทัด
         if (latest.risk >= 50) riskStatus = "🟡 เฝ้าระวัง";
-        
         msg = 
           `🐟 AquaTurn AI Report\n` +
           `บ่อ: ${locationData.name}\n` +
           `สถานะ: ${riskStatus} (${latest.risk}/100)\n` +
-          `น้ำ: ${latest.waterTemp.toFixed(1)}°C | โอกาสฝน: ${Math.round(latest.rainChance)}%\n` +
-          `ไซเรน: ${sirenText}`;
+          `น้ำ: ${latest.waterTemp.toFixed(1)}°C | โอกาสฝน: ${Math.round(weatherData.rainChance)}%\n` +
+          `ไซเรน: ${sirenText}${sensorFaultWarn}`;
       }
 
       const url = $("telegramUrl").value.trim() || config.telegramUrl || DEFAULT_TELEGRAM_URL;
 
-      // ... (โค้ดส่วน fetch ส่ง API เหมือนเดิม) ...
-      if (!url) {
-        alert(`[ตัวอย่างข้อความ Telegram]\n\n${msg}`);
-        setText("dataMessage", "แสดงรายงาน Telegram แล้ว");
+      if (!url || url === DEFAULT_TELEGRAM_URL) {
+        alert(`[ตัวอย่างข้อความที่ส่งเข้า Telegram]\n\n${msg}\n\nหมายเหตุ: หากต้องการส่งเข้ากลุ่มจริง ให้เปลี่ยน URL การตั้งค่า`);
+        setText("dataMessage", "แสดงรายงาน Telegram สำหรับนำเสนอแล้ว");
+        setText("sideMessage", "แสดงรายงานสำหรับนำเสนอแล้ว");
         return;
       }
 
@@ -158,21 +272,15 @@
         method: "POST",
         mode: "no-cors",
         body: JSON.stringify({ text: msg, message: msg })
-      })
-      .then(() => {
-        setText("dataMessage", "ส่งคำขอไป Telegram แล้ว หาก Apps Script ตั้งค่าถูกต้อง ข้อความจะเข้าแอปทันที");
-        setText("sideMessage", "ส่งคำขอไป Telegram แล้ว");
-      })
-      .catch(() => {
-        alert(`[Telegram Report Preview]\n\n${msg}\n\nเบราว์เซอร์ส่งคำขอไม่ได้ กรุณาตรวจสอบ Apps Script URL`);
+      }).then(() => {
+        setText("dataMessage", "ส่งคำขอไป Telegram แล้ว");
+      }).catch(() => {
         setText("dataMessage", "เบราว์เซอร์ส่งคำขอไม่ได้ ตรวจสอบ URL หรืออินเทอร์เน็ต");
-        setText("sideMessage", "ส่งคำขอไม่ได้");
       });
     }
 
     function downloadCsv(){const headers=['datetime','waterTemp','ph','tds','turbidity','localAirTemp','localHumidity','onlineTemp','onlineHumidity','risk','advice'],rows=filteredData.map(row=>headers.map(h=>row[h]).join(',')),csv='\ufeff'+headers.join(',')+'\n'+rows.join('\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='AquaTurn_AI_History.csv';a.click();URL.revokeObjectURL(url)}
     
-    // อัปเดตตารางให้แสดงสถานะไซเรนในประวัติข้อมูลย้อนหลัง
     function renderTable(){const body=$('historyBody'),rows=filteredData.slice(-12).reverse();body.innerHTML=rows.map(row=>{const risk=riskInfo(row.risk);const siren=row.risk>=75?'<span style="color:#fb7185;font-weight:bold;">🚨 ทำงาน</span>':'<span style="color:#22c55e;">สแตนด์บาย</span>';return`<tr><td>${row.displayTime}</td><td>${row.waterTemp.toFixed(1)}°C</td><td>${row.ph.toFixed(1)}</td><td>${Math.round(row.tds)} ppm</td><td>${Math.round(row.turbidity)} NTU</td><td>${row.localAirTemp.toFixed(1)}°C / ${Math.round(row.localHumidity)}%</td><td>${row.onlineTemp.toFixed(1)}°C / ${Math.round(row.onlineHumidity)}%</td><td>${row.risk}</td><td class="${risk.className}"><strong>${risk.text}</strong></td><td>${row.advice}</td><td>${siren}</td></tr>`}).join('');setText('rowCount',filteredData.length+' รายการ')}
     
     function drawCharts(){
@@ -243,7 +351,23 @@
         }
       });
     }
+    
     function renderAll(){locationData.name=$('pondName').value.trim()||locationData.name;setText('topLocation',locationData.name.replace('บ่อปลาทับทิม 01 | ',''));renderWeather();applyLatest();renderTable();drawCharts()}
+    
+    // ตั้งค่า Event Listener ปุ่มต่างๆ
+    $('simFaultBtn').addEventListener('click', () => {
+        isSimulatingFault = !isSimulatingFault;
+        $('simFaultBtn').style.background = isSimulatingFault ? 'rgba(245, 197, 66, 0.2)' : '';
+        // เพิ่มข้อมูลหลอกเข้าไป 1 แถวเพื่อกระตุ้นให้ระบบประมวลผลทันที
+        let dummy = {...allData[allData.length-1]};
+        dummy.datetime = new Date().toISOString();
+        dummy.displayTime = displayTime(new Date());
+        if (isSimulatingFault) dummy.waterTemp = 0;
+        allData.push(dummy);
+        filteredData = allData.slice(-12);
+        renderAll();
+    });
+
     $('pondName').value=locationData.name;$('latitude').value=locationData.latitude.toFixed(6);$('longitude').value=locationData.longitude.toFixed(6);$('sheetUrl').value=config.sheetUrl||'';$('telegramUrl').value=config.telegramUrl||'';const latest=allData[allData.length-1],end=new Date(latest.datetime),start=new Date(end);start.setDate(end.getDate()-10);$('fromDate').value=formatDateInput(start);$('toDate').value=formatDateInput(end);document.querySelectorAll('[data-days]').forEach(btn=>btn.addEventListener('click',()=>filterDays(Number(btn.dataset.days))));$('applyDateBtn').addEventListener('click',filterDateRange);$('resetFilterBtn').addEventListener('click',resetFilter);$('saveConfigBtn').addEventListener('click',saveConfig);$('fetchWeatherBtn').addEventListener('click',fetchWeather);$('loadSheetBtn').addEventListener('click',loadGoogleSheets);$('sendTelegramBtn').addEventListener('click',sendTelegram);$('sendTelegramSide').addEventListener('click',sendTelegram);$('downloadCsvBtn').addEventListener('click',downloadCsv);renderAll();
   </script>
 </body>
